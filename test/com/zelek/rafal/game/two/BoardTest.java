@@ -10,7 +10,7 @@ public class BoardTest {
 
 	@Before
 	public void setUp() {
-		board = new Board(5, 5);
+		board = new Board(5, 5, new ConsoleDisplayer(new TextMapper()));
 	}
 
 	@Test
@@ -156,8 +156,10 @@ public class BoardTest {
 		// when
 		board.display();
 		board.doStep();
+		System.out.println();
 		board.display();
 		board.doStep();
+		System.out.println();
 		board.display();
 
 		// then

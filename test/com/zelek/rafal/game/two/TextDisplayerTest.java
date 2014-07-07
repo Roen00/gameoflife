@@ -16,7 +16,7 @@ public class TextDisplayerTest {
 
 		cells[1][0] = new LiveCell();
 		// when
-		Displayer displayer = new ConsoleDisplayer();
+		Displayer displayer = new ConsoleDisplayer(new TextMapper());
 		displayer.display(cells);
 		// then
 

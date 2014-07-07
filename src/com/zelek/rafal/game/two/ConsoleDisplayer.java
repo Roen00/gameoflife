@@ -3,8 +3,8 @@ package com.zelek.rafal.game.two;
 public class ConsoleDisplayer extends Displayer {
 	
 
-	public ConsoleDisplayer() {
-		mapper = new TextMapper();
+	public ConsoleDisplayer(Mapper mapper) {
+		this.mapper = mapper;
 	}
 
 	@Override
