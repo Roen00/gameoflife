@@ -6,10 +6,6 @@ public final class CellsRecognizer {
 	}
 
 	public static int countCellType(Class<? extends Cell> cellType, Cell cell) {
-		if (cellType.isInstance(cell)) {
-			return 1;
-		} else {
-			return 0;
-		}
+		return cellType.isInstance(cell) ? 1 : 0;
 	}
 }

@@ -6,12 +6,12 @@ import org.junit.Test;
 
 public class TextMapperTest {
 	
-	
+	CellFactory cellFactory = new BaseCellFactory();
 
 	@Test
 	public void shouldTakeLivingCellAndReturnValidChar() {
 		//given
-		Cell cell = new LiveCell();
+		Cell cell = cellFactory.live();
 		Mapper mapper = new TextMapper();
 		
 		//when
@@ -23,7 +23,7 @@ public class TextMapperTest {
 	@Test
 	public void shouldTakeDeadCellAndReturnValidChar() {
 		//given
-		Cell cell = new DeadCell();
+		Cell cell = cellFactory.dead();
 		Mapper mapper = new TextMapper();
 		
 		//when

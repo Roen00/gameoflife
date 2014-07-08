@@ -6,5 +6,6 @@ public class TextMapper extends Mapper {
 	public TextMapper() {
 		cellsMap.put(LiveCell.class, "*");
 		cellsMap.put(DeadCell.class, "_");
+		cellsMap.put(null, "_");
 	}
 }

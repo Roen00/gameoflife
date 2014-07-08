@@ -5,16 +5,19 @@ import java.util.Map;
 
 public class Mapper {
 	protected Map<Class<? extends Cell>, String> cellsMap = new HashMap<Class<? extends Cell>, String>();
-	
-	public Mapper(Map<Class<? extends Cell>, String> hashMap){
+
+	public Mapper(Map<Class<? extends Cell>, String> hashMap) {
 		this.cellsMap = hashMap;
 	}
-	
-	protected Mapper(){
+
+	protected Mapper() {
 	}
 
-
-	public String map(Class<? extends Cell> cellType){
+	public String map(Class<? extends Cell> cellType) {
 		return cellsMap.get(cellType);
+	}
+
+	public String map(Cell cell) {
+		return cell == null ? cellsMap.get(null) : cellsMap.get(cell.getClass());
 	}
 }

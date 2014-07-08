@@ -7,23 +7,24 @@ import org.junit.Test;
 public class BoardTest {
 
 	private Board board;
-
+	private CellFactory cellFactory;
 	@Before
 	public void setUp() {
-		board = new Board(5, 5, new ConsoleDisplayer(new TextMapper()));
+		cellFactory = new BaseCellFactory();
+		board = new Board(5, 5, new ConsoleDisplayer(new TextMapper()), cellFactory);
 	}
 
 	@Test
 	public void shouldReturn3LiveNeighbours() {
 		// given
-		board.set(0, 0, new LiveCell());
-		board.set(1, 1, new LiveCell());
-		board.set(0, 1, new LiveCell());
-		board.set(1, 0, new LiveCell());
+		board.set(new Coordinate(0,0), cellFactory.live());
+		board.set(new Coordinate(1,1), cellFactory.live());
+		board.set(new Coordinate(0,1), cellFactory.live());
+		board.set(new Coordinate(1,0), cellFactory.live());
 
 		// when
 		Neighbourhood neighbourhood = board.neighbourhoodOf(0, 0);
-		int numberOfLivingNeighbours = neighbourhood.numberOf(LiveCell.class);
+		int numberOfLivingNeighbours = neighbourhood.numberOf(cellFactory.live().getClass());
 
 		// then
 		Assertions.assertThat(numberOfLivingNeighbours).isEqualTo(3);
@@ -32,18 +33,20 @@ public class BoardTest {
 	@Test
 	public void shouldReturn8LiveNeighbours() {
 		// given
-		board.set(0, 0, new LiveCell());
-		board.set(0, 1, new LiveCell());
-		board.set(0, 2, new LiveCell());
-		board.set(1, 0, new LiveCell());
-		board.set(1, 2, new LiveCell());
-		board.set(2, 0, new LiveCell());
-		board.set(2, 1, new LiveCell());
-		board.set(2, 2, new LiveCell());
+		board.set(new Coordinate(0,0), cellFactory.live());
+		board.set(new Coordinate(0,1), cellFactory.live());
+		board.set(new Coordinate(0,2), cellFactory.live());
+		board.set(new Coordinate(1,0), cellFactory.live());
+		board.set(new Coordinate(1,2), cellFactory.live());
+		board.set(new Coordinate(2,0), cellFactory.live());
+		board.set(new Coordinate(2,1), cellFactory.live());
+		board.set(new Coordinate(2,2), cellFactory.live());
 
 		// when
 		Neighbourhood neighbourhood = board.neighbourhoodOf(1, 1);
-		int numberOfLivingNeighbours = neighbourhood.numberOf(LiveCell.class);
+		
+		System.out.println(neighbourhood);
+		int numberOfLivingNeighbours = neighbourhood.numberOf(cellFactory.live().getClass());
 
 		// then
 		Assertions.assertThat(numberOfLivingNeighbours).isEqualTo(8);
@@ -52,106 +55,56 @@ public class BoardTest {
 	@Test
 	public void thereShouldBePossibilityToInitiateBoard() {
 		// when
-		board.set(1, 1, new LiveCell());
-		board.set(2, 2, new LiveCell());
+		board.set(new Coordinate(1,1), cellFactory.live());
+		board.set(new Coordinate(2,2), cellFactory.live());
 
 		// then
-		Assertions.assertThat(board.cellAt(1, 1)).isInstanceOf(LiveCell.class);
+		Assertions.assertThat(board.cellAt(new Coordinate(1,1))).isInstanceOf(cellFactory.live().getClass());
+		Assertions.assertThat(board.cellAt(new Coordinate(2,2))).isInstanceOf(cellFactory.live().getClass());
 	}
 
-	@Test
-	public void shouldReturn8DeadNeighbours() {
-		// given
-		board.set(1, 1, new DeadCell());
 
-		// when
-		Neighbourhood neighbourhood = board.neighbourhoodOf(1, 1);
-		int numberOfDeadNeighbours = neighbourhood.numberOf(DeadCell.class);
-
-		// then
-		Assertions.assertThat(numberOfDeadNeighbours).isEqualTo(8);
-	}
-
-	@Test
-	public void shouldReturn3DeadNeighbours() {
-		// given
-		board.set(0, 0, new LiveCell());
-
-		// when
-		Neighbourhood neighbourhood = board.neighbourhoodOf(0, 0);
-		int numberOfDeadNeighbours = neighbourhood.numberOf(DeadCell.class);
-
-		// then
-		Assertions.assertThat(numberOfDeadNeighbours).isEqualTo(3);
-	}
-
-	@Test
-	public void shouldReturn3DeadNeighboursRightBottom() {
-		// given
-		board.set(4, 4, new LiveCell());
-		board.set(4, 3, new LiveCell());
-
-		// when
-		Neighbourhood neighbourhood = board.neighbourhoodOf(4, 4);
-		int numberOfDeadNeighbours = neighbourhood.numberOf(DeadCell.class);
-
-		// then
-		Assertions.assertThat(numberOfDeadNeighbours).isEqualTo(2);
-	}
-
-	@Test
-	public void shouldReturn2DeadNeighbours() {
-		// given
-		board.set(0, 0, new LiveCell());
-		board.set(1, 1, new LiveCell());
-
-		// when
-		Neighbourhood neighbourhood = board.neighbourhoodOf(0, 0);
-		int numberOfDeadNeighbours = neighbourhood.numberOf(DeadCell.class);
-
-		// then
-		Assertions.assertThat(numberOfDeadNeighbours).isEqualTo(2);
-	}
-	
 	@Test
 	public void shouldDoStepStay4CellsAlive() {
 		// given
-		board.set(0, 0, new LiveCell());
-		board.set(1, 1, new LiveCell());
-		board.set(0, 1, new LiveCell());
-		board.set(1, 0, new LiveCell());
+		board.set(new Coordinate(0,0), cellFactory.live());
+		board.set(new Coordinate(1,1), cellFactory.live());
+		board.set(new Coordinate(0,1), cellFactory.live());
+		board.set(new Coordinate(1,0), cellFactory.live());
 
 		// when
 		board.doStep();
+		board.doStep();
+		board.doStep();
 
 		// then
-		Assertions.assertThat(board.cellAt(0, 0)).isInstanceOf(LiveCell.class);
-		Assertions.assertThat(board.cellAt(1, 1)).isInstanceOf(LiveCell.class);
-		Assertions.assertThat(board.cellAt(0, 1)).isInstanceOf(LiveCell.class);
-		Assertions.assertThat(board.cellAt(1, 0)).isInstanceOf(LiveCell.class);
+		Assertions.assertThat(board.cellAt(new Coordinate(0, 0))).isInstanceOf(cellFactory.live().getClass());
+		Assertions.assertThat(board.cellAt(new Coordinate(1, 1))).isInstanceOf(cellFactory.live().getClass());
+		Assertions.assertThat(board.cellAt(new Coordinate(0, 1))).isInstanceOf(cellFactory.live().getClass());
+		Assertions.assertThat(board.cellAt(new Coordinate(1, 0))).isInstanceOf(cellFactory.live().getClass());
 	}
 	
 	@Test
 	public void shouldDoStepMakeCellDead() {
 		// given
-		board.set(0, 0, new LiveCell());
+		board.set(new Coordinate(0,0), cellFactory.live());
 
 		// when
 		board.doStep();
 
 		// then
-		Assertions.assertThat(board.cellAt(0, 0)).isInstanceOf(DeadCell.class);
+		Assertions.assertThat(board.cellAt(new Coordinate(0,0))).isInstanceOf(cellFactory.dead().getClass());
 	}
 	
 	@Test
 	public void shouldTesIntegracyjny() {
 		// given
-		board.set(1, 0, new LiveCell());
-		board.set(2, 0, new LiveCell());
-		board.set(0, 1, new LiveCell());
-		board.set(1, 3, new LiveCell());
-		board.set(2, 3, new LiveCell());
-		board.set(3, 2, new LiveCell());
+		board.set(new Coordinate(1,0), cellFactory.live());
+		board.set(new Coordinate(2,0), cellFactory.live());
+		board.set(new Coordinate(0,1), cellFactory.live());
+		board.set(new Coordinate(1,3), cellFactory.live());
+		board.set(new Coordinate(2,3), cellFactory.live());
+		board.set(new Coordinate(3,2), cellFactory.live());
 
 		// when
 		board.display();
@@ -163,6 +116,13 @@ public class BoardTest {
 		board.display();
 
 		// then
+
+		Assertions.assertThat(board.cellAt(new Coordinate(1,0))).isInstanceOf(cellFactory.live().getClass());
+		Assertions.assertThat(board.cellAt(new Coordinate(2,0))).isInstanceOf(cellFactory.live().getClass());
+		Assertions.assertThat(board.cellAt(new Coordinate(0,1))).isInstanceOf(cellFactory.live().getClass());
+		Assertions.assertThat(board.cellAt(new Coordinate(1,3))).isInstanceOf(cellFactory.live().getClass());
+		Assertions.assertThat(board.cellAt(new Coordinate(2,3))).isInstanceOf(cellFactory.live().getClass());
+		Assertions.assertThat(board.cellAt(new Coordinate(3,2))).isInstanceOf(cellFactory.live().getClass());
 	}
 
 }
